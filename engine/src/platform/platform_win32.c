@@ -191,4 +191,36 @@ void platform_sleep(u64 ms) {
     Sleep(ms);
 }
 
+LRESULT CALLBACK win32_process_message(HWND hwnd, u32 msg, WPARAM w_param, LPARAM l_param) {
+    switch (msg) {
+        case WM_ERASEBKGND: {
+            return 1;
+        }
+
+        case WM_CLOSE: {
+            // TODO: Fire event for the application to quit
+            return 0;
+        }
+
+        case WM_DESTROY: {
+            PostQuitMessage(0);
+            
+            return 0;
+        }
+
+        case WM_SIZE: {
+            /*
+            RECT r;
+
+            GetClientRect(hwnd, &r);
+
+            u32 width = r.right - r.left;
+            u32 height = r.bottom - r.top;
+            */
+
+            // TODO: Fire event for window resize
+        } break;
+    }
+}
+
 #endif
