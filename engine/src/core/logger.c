@@ -5,10 +5,6 @@
 #include <string.h>
 #include <stdarg.h>
 
-void report_assertion_failure(const char* expression, const char* message, const char* file, i32 line) {
-    log_output(LOG_LEVEL_FATAL, "[ASSERT] Assertion failure '%s' in %s at line %d: %s", expression, file, line, message);
-}
-
 b8 initialize_logging() {
     // TODO: Create log file
     return TRUE;
@@ -38,4 +34,8 @@ void log_output(log_level level, const char* message, ...) {
 
     sprintf(out_message2, "%s%s\n", level_strings[level], out_message);
     printf("%s", out_message2); // TODO: Platform specific output
+}
+
+void report_assertion_failure(const char* expression, const char* message, const char* file, i32 line) {
+    log_output(LOG_LEVEL_FATAL, "[ASSERT] Assertion failure '%s' in %s at line %d: %s", expression, file, line, message);
 }
