@@ -16,7 +16,7 @@ void shutdown_logging() {
 
 WAPI void log_output(log_level level, const char* message, ...) {
     const char* level_strings[6] = {"[FATAL] ", "[ERROR] ", "[WARN] ", "[INFO] ", "[DEBUG] ", "[TRACE] "};
-    b8 is_error = level < 2;
+    //b8 is_error = level < 2;
 
     // FIXME: Find a way around using dynamic memory allocations because it's slow
     char out_message[32000];
@@ -30,6 +30,8 @@ WAPI void log_output(log_level level, const char* message, ...) {
     vsnprintf(out_message, 32000, message, arg_ptr);
     va_end(arg_ptr);
 
-    sprintf(out_message, "%s%s\n", level_strings[level], out_message);
-    printf("%s", out_message); // TODO: Platform specific output
+    char out_message2[32000];
+
+    sprintf(out_message2, "%s%s\n", level_strings[level], out_message);
+    printf("%s", out_message2); // TODO: Platform specific output
 }

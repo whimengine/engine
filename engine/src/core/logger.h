@@ -51,7 +51,7 @@ WAPI void log_output(log_level level, const char* message, ...);
 #endif
 
 #if LOG_TRACE_ENABLED == 1
-#define WTRACE(message, ...) log_output(LOG_LEVEL_DEBUG, message, ##__VA_ARGS__);
+#define WTRACE(message, ...) log_output(LOG_LEVEL_TRACE, message, ##__VA_ARGS__);
 #else
 #define WTRACE(message, ...)
 #endif
