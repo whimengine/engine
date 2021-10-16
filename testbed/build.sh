@@ -6,7 +6,7 @@ assembly="testbed"
 compilerFlags="-g -fdeclspec -fPIC -Wall -Werror"
 includeFlags="-Isrc -I../engine/src/"
 linkerFlags="-L../bin/ -lengine -Wl,-rpath,."
-defines="-D_DEBUG -DKIMPORT"
+defines="-D_DEBUG -DWIMPORT"
 
 echo Building wengine/$assembly
 

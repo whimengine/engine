@@ -5,7 +5,7 @@ set assembly=testbed
 set compilerFlags=-g
 set includeFlags=-Isrc -I../engine/src/
 set linkerFlags=-L../bin/ -lengine.lib
-set defines=-D_DEBUG -DKIMPORT
+set defines=-D_DEBUG -DWIMPORT
 
 echo Building wengine\%assembly%%
 
