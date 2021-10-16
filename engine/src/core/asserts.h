@@ -8,7 +8,7 @@
 #ifdef WASSERTIONS_ENABLED
 #if _MSC_VER
 #include <intrin.h>
-#define debugBreak() __debugBreak()
+#define debugBreak() __debugbreak()
 #else
 #define debugBreak() __builting_trap()
 #endif
