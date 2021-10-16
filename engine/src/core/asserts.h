@@ -22,4 +22,26 @@ void report_assertion_failure(const char* expression, const char* message, const
     }                                                            \
 }
 
+#define WASSERT_MSG(expr, message) {                                  \
+    if (expr) {} else {                                               \
+        report_assertion_failure(#expr, message, __FILE__, __LINE__); \
+        debugBreak();                                                 \
+    }                                                                 \
+}
+
+#ifdef _DEBUG
+#define WASSERT_DEBUG(expr) {                                    \
+    if (expr) {} else {                                          \
+        report_assertion_failure(#expr, "", __FILE__, __LINE__); \
+        debugBreak();                                            \
+    }                                                            \
+}
+
+#else
+#define WASSERT_DEBUG(expr)
+#endif
+#else
+#define WASSERT(expr)
+#define WASSERT_MSG(expr)
+#define WASSERT_DEBUG(expr)
 #endif
