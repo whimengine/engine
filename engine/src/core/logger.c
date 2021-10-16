@@ -16,7 +16,7 @@ void shutdown_logging() {
 }
 
 void log_output(log_level level, const char* message, ...) {
-    const char* level_strings[6] = {"[FATAL] ", "[ERROR] ", "[WARN] ", "[INFO] ", "[DEBUG] ", "[TRACE] "};
+    const char* level_strings[6] = {"[FATAL] ", "[ERROR] ", "[WARN]  ", "[INFO]  ", "[DEBUG] ", "[TRACE] "};
     //b8 is_error = level < 2;
 
     // FIXME: Find a way around using dynamic memory allocations because it's slow
