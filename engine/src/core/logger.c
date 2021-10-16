@@ -5,6 +5,10 @@
 #include <string.h>
 #include <stdarg.h>
 
+void report_assertion_failure(const char* expression, const char* message, const char* file, i32 line) {
+    log_output(LOG_LEVEL_FATAL, "[ASSERT] Assertion failure '%s' in %s at line %d: %s", expression, file, line, message);
+}
+
 b8 initialize_logging() {
     // TODO: Create log file
     return TRUE;
@@ -14,7 +18,7 @@ void shutdown_logging() {
     // TODO: Cleanup logging/any queued entries
 }
 
-WAPI void log_output(log_level level, const char* message, ...) {
+void log_output(log_level level, const char* message, ...) {
     const char* level_strings[6] = {"[FATAL] ", "[ERROR] ", "[WARN] ", "[INFO] ", "[DEBUG] ", "[TRACE] "};
     //b8 is_error = level < 2;
 
