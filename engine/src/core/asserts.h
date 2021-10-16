@@ -13,7 +13,7 @@
 #define debugBreak() __builting_trap()
 #endif
 
-void report_assertion_failure(const char* expression, const char* message, const char* file, i32 line);
+WAPI void report_assertion_failure(const char* expression, const char* message, const char* file, i32 line);
 
 #define WASSERT(expr) {                                          \
     if (expr) {} else {                                          \
