@@ -38,5 +38,5 @@ void log_output(log_level level, const char* message, ...) {
 }
 
 void report_assertion_failure(const char* expression, const char* message, const char* file, i32 line) {
-    log_output(LOG_LEVEL_FATAL, "[ASSERT] Assertion failure '%s' in %s at line %d: %s", expression, file, line, message);
+    log_output(LOG_LEVEL_FATAL, "Assertion failure '%s' in %s at line %d: %s", expression, file, line, message);
 }
