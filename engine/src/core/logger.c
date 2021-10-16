@@ -1,4 +1,5 @@
 #include "logger.h"
+#include "asserts.h"
 
 // TODO: Temporary
 #include <stdio.h>
