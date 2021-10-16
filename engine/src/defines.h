@@ -43,27 +43,27 @@ STATIC_ASSERT(sizeof(f64) == 8, "[ERROR] Expected f64 to be 8 bytes.");
 
 /* Platform Detection */
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) 
-#define KPLATFORM_WINDOWS 1
+#define WPLATFORM_WINDOWS 1
 #ifndef _WIN64
 #error "[PLATFORM] wengine does not support Windows 32."
 #endif
 #elif defined(__linux__) || defined(__gnu_linux__)
-#define KPLATFORM_LINUX 1
+#define WPLATFORM_LINUX 1
 #if defined(__ANDROID__)
-#define KPLATFORM_ANDROID 1
+#define WPLATFORM_ANDROID 1
 #endif
 #elif defined(__unix__)
-#define KPLATFORM_UNIX 1
+#define WPLATFORM_UNIX 1
 #elif defined(_POSIX_VERSION)
-#define KPLATFORM_POSIX 1
+#define WPLATFORM_POSIX 1
 #elif __APPLE__
-#define KPLATFORM_APPLE 1
+#define WPLATFORM_APPLE 1
 #include <TargetConditionals.h>
 #if TARGET_IPHONE_SIMULATOR
-#define KPLATFORM_IOS 1
-#define KPLATFORM_IOS_SIMULATOR 1
+#define WPLATFORM_IOS 1
+#define WPLATFORM_IOS_SIMULATOR 1
 #elif TARGET_OS_IPHONE
-#define KPLATFORM_IOS 1
+#define WPLATFORM_IOS 1
 #elif TARGET_OS_MAC
 #else
 #error "[PLATFORM] Unable to recognize Apple Platform."
@@ -72,16 +72,16 @@ STATIC_ASSERT(sizeof(f64) == 8, "[ERROR] Expected f64 to be 8 bytes.");
 #error "[PLATFORM] Unable to recognize Platform."
 #endif
 
-#ifdef KEXPORT
+#ifdef WEXPORT
 #ifdef _MSC_VER
-#define KAPI __declspec(dllexport)
+#define WAPI __declspec(dllexport)
 #else
-#define KAPI __attribute__((visibility("default")))
+#define WAPI __attribute__((visibility("default")))
 #endif
 #else
 #ifdef _MSC_VER
-#define KAPI __declspec(dllimport)
+#define WAPI __declspec(dllimport)
 #else
-#define KAPI
+#define WAPI
 #endif
 #endif
