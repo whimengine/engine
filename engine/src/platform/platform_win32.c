@@ -6,11 +6,15 @@
 
 #include <windows.h>
 #include <windowsx.h>
+#include <stdlib.h>
 
 typedef struct internal_state {
     HINSTANCE h_instance;
     HWND hwnd;
 } internal_state;
+
+static f64 clock_frequency;
+static LARGE_INTEGER start_time;
 
 LRESULT CALLBACK win32_process_message(HWND hwnd, u32 msg, WPARAM w_param, LPARAM l_param);
 
@@ -95,7 +99,96 @@ b8 platform_startup(platform_state* plat_state, const char* application_name, i3
 
     ShowWindow(state->hwnd, show_window_command_flags);
 
+    LARGE_INTEGER frequency;
+
+    QueryPerformanceFrequency(&frequency);
+
+    clock_frequency = 1.0 / (f64) frequency.QuadPart;
+
+    QueryPerformanceCounter(&start_time);
+
     return TRUE;
+}
+
+void platform_shutdown(platform_state* plat_state) {
+    internal_state* state = (internal_state*) plat_state->internal_state;
+
+    if (state->hwnd) {
+        DestroyWindow(state->hwnd);
+
+        state->hwnd = 0;
+    }
+}
+
+b8 platform_pump_messages(platform_state* plat_state) {
+    MSG message;
+    
+    while (PeekMessageA(&message, NULL, 0, 0, PM_REMOVE)) {
+        TranslateMessage(&message);
+        DispatchMessageA(&message);
+    }
+
+    return TRUE;
+}
+
+void* platform_allocate(u64 size, b8 aligned) {
+    return malloc(size);
+}
+
+void platform_free(void* block, b8 aligned) {
+    free(block);
+}
+
+void* platform_zero_memory(void* block, u64 size) {
+    return memset(block, 0, size);
+}
+
+void* platform_copy_memory(void* dest, const void* source, u64 size) {
+    return memcpy(dest, source, size);
+}
+
+void* platform_set_memory(void* dest, i32 value, u64 size) {
+    return memset(dest, value, size);
+}
+
+void platform_console_write(const char* message, u8 color) {
+    HANDLE console_handle = GetStdHandle(STD_OUTPUT_HANDLE);
+    
+    static u8 levels[6] = {64, 4, 6, 2, 1, 8};
+
+    SetConsoleTextAttribute(console_handle, levels[color]);
+    OutputDebugStringA(message);
+
+    u64 length = strlen(message);
+    LPWORD number_written = 0;
+
+    WriteConsoleA(GetStdHandle(STD_OUTPUT_HANDLE), message, (DWORD) length, number_written, 0);
+}
+
+void platform_console_write_error(const char* message, u8 color) {
+    HANDLE console_handle = GetStdHandle(STD_ERROR_HANDLE);
+    
+    static u8 levels[6] = {64, 4, 6, 2, 1, 8};
+
+    SetConsoleTextAttribute(console_handle, levels[color]);
+    OutputDebugStringA(message);
+
+    u64 length = strlen(message);
+    LPWORD number_written = 0;
+
+    WriteConsoleA(GetStdHandle(STD_ERROR_HANDLE), message, (DWORD) length, number_written, 0);
+}
+
+f64 platform_get_absolute_time() {
+    LARGE_INTEGER now_time;
+
+    QueryPerformanceCounter(&now_time);
+
+    return (f64) now_time.QuadPart * clock_frequency;
+}
+
+void platform_sleep(u64 ms) {
+    Sleep(ms);
 }
 
 #endif
