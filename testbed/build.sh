@@ -14,4 +14,4 @@ cFiles=$(find . -type f -name "*.c")
 
 echo   Compiling wengine/$assembly
 
-clang $cFiles $compilerFlags -o ../bin/lib$assembly.so $defines $includeFlags $linkerFlags
+clang $cFiles $compilerFlags -o ../bin/lib$assembly $defines $includeFlags $linkerFlags
