@@ -21,6 +21,7 @@ LRESULT CALLBACK win32_process_message(HWND hwnd, u32 msg, WPARAM w_param, LPARA
 b8 platform_startup(platform_state* plat_state, const char* application_name, i32 x, i32 y, i32 width, i32 height) {
     plat_state->internal_state = malloc(sizeof(internal_state));
     internal_state* state = (internal_state*) plat_state->internal_state;
+
     state->h_instance = GetModuleHandleA(0);
 
     HICON icon = LoadIcon(state->h_instance, IDI_APPLICATION);
@@ -39,7 +40,7 @@ b8 platform_startup(platform_state* plat_state, const char* application_name, i3
     wc.lpszClassName = "wengine_window_class";
 
     if (!RegisterClassA(&wc)) {
-        MessageBoxA(0, "Window Registration Failed!", "Windows Platform", MB_ICONERROR | MB_OK);
+        MessageBoxA(0, "Failed to construct window.", "WEngine", MB_ICONERROR | MB_OK);
 
         return FALSE;
     }
@@ -62,15 +63,15 @@ b8 platform_startup(platform_state* plat_state, const char* application_name, i3
     window_style |= WS_THICKFRAME;
 
     RECT border_rect = {0, 0, 0, 0};
-
     AdjustWindowRectEx(&border_rect, window_style, 0, window_ex_style);
 
     window_x += border_rect.left;
     window_y += border_rect.top;
+
     window_width += border_rect.right - border_rect.left;
     window_height += border_rect.bottom - border_rect.top;
 
-    HWND handle = CreateWindowA(
+    HWND handle = CreateWindowExA(
         window_ex_style,
         "wengine_window_class",
         application_name,
@@ -86,7 +87,8 @@ b8 platform_startup(platform_state* plat_state, const char* application_name, i3
     );
 
     if (handle == 0) {
-        MessageBoxA(NULL, "Failed to construct window.", "Windows Platform", MB_ICONERROR | MB_OK);
+        MessageBoxA(NULL, "Failed to construct window.", "WEngine", MB_ICONERROR | MB_OK);
+
         WFATAL("Failed to construct window.");
 
         return FALSE;
@@ -94,7 +96,7 @@ b8 platform_startup(platform_state* plat_state, const char* application_name, i3
         state->hwnd = handle;
     }
 
-    b32 should_activate = 1; // TODO: If window doesn't accept input, this should be false
+    b32 should_activate = 1;
     i32 show_window_command_flags = should_activate ? SW_SHOW : SW_SHOWNOACTIVATE;
 
     ShowWindow(state->hwnd, show_window_command_flags);
@@ -115,14 +117,13 @@ void platform_shutdown(platform_state* plat_state) {
 
     if (state->hwnd) {
         DestroyWindow(state->hwnd);
-
         state->hwnd = 0;
     }
 }
 
 b8 platform_pump_messages(platform_state* plat_state) {
     MSG message;
-    
+
     while (PeekMessageA(&message, NULL, 0, 0, PM_REMOVE)) {
         TranslateMessage(&message);
         DispatchMessageA(&message);
@@ -153,28 +154,26 @@ void* platform_set_memory(void* dest, i32 value, u64 size) {
 
 void platform_console_write(const char* message, u8 color) {
     HANDLE console_handle = GetStdHandle(STD_OUTPUT_HANDLE);
-    
     static u8 levels[6] = {64, 4, 6, 2, 1, 8};
 
     SetConsoleTextAttribute(console_handle, levels[color]);
     OutputDebugStringA(message);
 
     u64 length = strlen(message);
-    LPWORD number_written = 0;
+    LPDWORD number_written = 0;
 
     WriteConsoleA(GetStdHandle(STD_OUTPUT_HANDLE), message, (DWORD) length, number_written, 0);
 }
 
 void platform_console_write_error(const char* message, u8 color) {
     HANDLE console_handle = GetStdHandle(STD_ERROR_HANDLE);
-    
     static u8 levels[6] = {64, 4, 6, 2, 1, 8};
 
     SetConsoleTextAttribute(console_handle, levels[color]);
     OutputDebugStringA(message);
 
     u64 length = strlen(message);
-    LPWORD number_written = 0;
+    LPDWORD number_written = 0;
 
     WriteConsoleA(GetStdHandle(STD_ERROR_HANDLE), message, (DWORD) length, number_written, 0);
 }
@@ -184,7 +183,7 @@ f64 platform_get_absolute_time() {
 
     QueryPerformanceCounter(&now_time);
 
-    return (f64) now_time.QuadPart * clock_frequency;
+    return (f64) now_time.QuadPart* clock_frequency;
 }
 
 void platform_sleep(u64 ms) {
@@ -196,49 +195,39 @@ LRESULT CALLBACK win32_process_message(HWND hwnd, u32 msg, WPARAM w_param, LPARA
         case WM_ERASEBKGND: {
             return 1;
         }
-
         case WM_CLOSE: {
-            // TODO: Fire event for the application to quit
             return 0;
         }
 
         case WM_DESTROY: {
             PostQuitMessage(0);
-            
+
             return 0;
         }
 
         case WM_SIZE: {
-            /*
-            RECT r;
-
-            GetClientRect(hwnd, &r);
-
-            u32 width = r.right - r.left;
-            u32 height = r.bottom - r.top;
-            */
-
-            // TODO: Fire event for window resize
+            // RECT r;
+            // GetClientRect(hwnd, &r);
+            // u32 width = r.right - r.left;
+            // u32 height = r.bottom - r.top;
         } break;
 
         case WM_KEYDOWN: {
 
-        } break;
+        }
 
         case WM_SYSKEYDOWN: {
 
-        } break;
+        }
 
         case WM_KEYUP: {
 
-        } break;
+        }
 
         case WM_SYSKEYUP: {
             /*
             b8 pressed = (msg == WM_KEYDOWN || msg == WM_SYSKEYDOWN);
             */
-
-            // TODO: Input processing
         } break;
 
         case WM_MOUSEMOVE: {
@@ -246,48 +235,43 @@ LRESULT CALLBACK win32_process_message(HWND hwnd, u32 msg, WPARAM w_param, LPARA
             i32 x_position = GET_X_LPARAM(l_param);
             i32 y_position = GET_Y_LPARAM(l_param);
             */
-
-            // TODO: Input processing
         } break;
 
         case WM_MOUSEWHEEL: {
             /*
             i32 z_delta = GET_WHEEL_DELTA_WPARAM(w_param);
-
             if (z_delta != 0) {
+                // Flatten the input to an OS-independent (-1, 1)
                 z_delta = (z_delta < 0) ? -1 : 1;
+                // TODO: input processing.
             }
-            */
-
-            // TODO: Input processing
+           */
         } break;
 
         case WM_LBUTTONDOWN: {
 
-        } break;
+        }
 
         case WM_MBUTTONDOWN: {
 
-        } break;
+        }
 
         case WM_RBUTTONDOWN: {
 
-        } break;
+        }
 
         case WM_LBUTTONUP: {
 
-        } break;
+        }
 
         case WM_MBUTTONUP: {
 
-        } break;
+        }
 
         case WM_RBUTTONUP: {
             /*
-            b8 pressed = msg == WM_LBUTTONDOWN || msg == WM_MBUTTONDOWN || msg == WM_RBUTTONDOWN;
+            b8 pressed = msg == WM_LBUTTONDOWN || msg == WM_RBUTTONDOWN || msg == WM_MBUTTONDOWN;
             */
-
-            // TODO: Input processing
         } break;
     }
 
