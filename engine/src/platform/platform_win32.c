@@ -220,7 +220,78 @@ LRESULT CALLBACK win32_process_message(HWND hwnd, u32 msg, WPARAM w_param, LPARA
 
             // TODO: Fire event for window resize
         } break;
+
+        case WM_KEYDOWN: {
+
+        } break;
+
+        case WM_SYSKEYDOWN: {
+
+        } break;
+
+        case WM_KEYUP: {
+
+        } break;
+
+        case WM_SYSKEYUP: {
+            /*
+            b8 pressed = (msg == WM_KEYDOWN || msg == WM_SYSKEYDOWN);
+            */
+
+            // TODO: Input processing
+        } break;
+
+        case WM_MOUSEMOVE: {
+            /*
+            i32 x_position = GET_X_LPARAM(l_param);
+            i32 y_position = GET_Y_LPARAM(l_param);
+            */
+
+            // TODO: Input processing
+        } break;
+
+        case WM_MOUSEWHEEL: {
+            /*
+            i32 z_delta = GET_WHEEL_DELTA_WPARAM(w_param);
+
+            if (z_delta != 0) {
+                z_delta = (z_delta < 0) ? -1 : 1;
+            }
+            */
+
+            // TODO: Input processing
+        } break;
+
+        case WM_LBUTTONDOWN: {
+
+        } break;
+
+        case WM_MBUTTONDOWN: {
+
+        } break;
+
+        case WM_RBUTTONDOWN: {
+
+        } break;
+
+        case WM_LBUTTONUP: {
+
+        } break;
+
+        case WM_MBUTTONUP: {
+
+        } break;
+
+        case WM_RBUTTONUP: {
+            /*
+            b8 pressed = msg == WM_LBUTTONDOWN || msg == WM_MBUTTONDOWN || msg == WM_RBUTTONDOWN;
+            */
+
+            // TODO: Input processing
+        } break;
     }
+
+    return DefWindowProcA(hwnd, msg, w_param, l_param);
 }
 
-#endif
+#endif /* WPLATFORM_WINDOWS */
